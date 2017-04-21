@@ -1,51 +1,51 @@
-//±àÒë»·¾³£ºwindows 10 Chinese;notepad++;MinGW.
+//ç¼–è¯‘ç¯å¢ƒï¼šwindows 10 Chinese;notepad++;MinGW.
 //gcc -std=c99
 //********************************************************************************************************************************************
-/*±¾³ÌĞòÎªÂÛÎÄ Preconditioners for the discretized time-harmonic Maxwell
-equations in mixed form  µÄ»ìºÏÓĞÏŞÔªÊµÏÖ
+/*æœ¬ç¨‹åºä¸ºè®ºæ–‡ Preconditioners for the discretized time-harmonic Maxwell
+equations in mixed form  çš„æ··åˆæœ‰é™å…ƒå®ç°
 
 ********************************************************************************************************************************************
-±¾³ÌĞòÖ»ÄÜÔÚ ÔÚ u£¨x,y£©=1-y^2,1-x^2), p = (1 ? x^2 )(1 ? y^2 )ºÍthe unit square(-1=<x=<1,-1=<y=<1,)ÏÂ»ñµÃÕıÈ·µÄÓÒ¶ËÏî.
-ÇëºöÂÔerr1;Çë×¢Òâ¸ü¸Ä³ÌĞòÖĞµÄkÖµ
-±àÒëÍê³Éºó£¬ÇëÖØĞÂÔÚËùÓĞÎÄ¼şËùÔÚµÄÍ¬Ò»¸öÄ¿Â¼ÏÂ´ò¿ªÃüÁîĞĞ ³ÌĞò¡£
+æœ¬ç¨‹åºåªèƒ½åœ¨ åœ¨ uï¼ˆx,yï¼‰=1-y^2,1-x^2), p = (1 ? x^2 )(1 ? y^2 )å’Œthe unit square(-1=<x=<1,-1=<y=<1,)ä¸‹è·å¾—æ­£ç¡®çš„å³ç«¯é¡¹.
+è¯·å¿½ç•¥err1;è¯·æ³¨æ„æ›´æ”¹ç¨‹åºä¸­çš„kå€¼
+ç¼–è¯‘å®Œæˆåï¼Œè¯·é‡æ–°åœ¨æ‰€æœ‰æ–‡ä»¶æ‰€åœ¨çš„åŒä¸€ä¸ªç›®å½•ä¸‹æ‰“å¼€å‘½ä»¤è¡Œ ç¨‹åºã€‚
 ********************************************************************************************************************************************
-Ê×ÏÈÓÉEasyMesh(https://zsy.wodemo.com/file/387961 ; https://zsy.wodemo.com/cat/4506´ËÑ¹Ëõ°ü°üº¬ËùÓÃÍø¸ñ)»ñµÃÍø¸ñĞÅÏ¢£¨EasyMeshÖĞ £¬¶Ô¸üÏ¸µÄÍø¸ñ£¬ĞèĞŞ¸ÄEasyMeshµÄ´óĞ¡ÏŞÖÆ£¬Èç  #define MAX_NODES 8000£©¡£Éú³ÉÒÔÏÂÈı¸öÎÄ¼ş
-EasyMeshÊ¹ÓÃ·½·¨£º±àÒëEasyMeshºó ÔÚEasyMesh.exeËùÔÚÎÄ¼ş¼Ğ°´Shift+ÓÒ¼ü£¬´ò¿ª  ÔÚ´Ë´¦´ò¿ªÃüÁî´°¿Ú£¨W£© Ñ¡Ïî  ÊäÈë EasyMesh G6 +dxf  (´Ë´¦G6´ú±íG6.d,ÎªEasyMeshÊäÈëÎÄ¼ş)
+é¦–å…ˆç”±EasyMesh(https://zsy.wodemo.com/file/387961 ; https://zsy.wodemo.com/cat/4506æ­¤å‹ç¼©åŒ…åŒ…å«æ‰€ç”¨ç½‘æ ¼)è·å¾—ç½‘æ ¼ä¿¡æ¯ï¼ˆEasyMeshä¸­ ï¼Œå¯¹æ›´ç»†çš„ç½‘æ ¼ï¼Œéœ€ä¿®æ”¹EasyMeshçš„å¤§å°é™åˆ¶ï¼Œå¦‚  #define MAX_NODES 8000ï¼‰ã€‚ç”Ÿæˆä»¥ä¸‹ä¸‰ä¸ªæ–‡ä»¶
+EasyMeshä½¿ç”¨æ–¹æ³•ï¼šç¼–è¯‘EasyMeshå åœ¨EasyMesh.exeæ‰€åœ¨æ–‡ä»¶å¤¹æŒ‰Shift+å³é”®ï¼Œæ‰“å¼€  åœ¨æ­¤å¤„æ‰“å¼€å‘½ä»¤çª—å£ï¼ˆWï¼‰ é€‰é¡¹  è¾“å…¥ EasyMesh G6 +dxf  (æ­¤å¤„G6ä»£è¡¨G6.d,ä¸ºEasyMeshè¾“å…¥æ–‡ä»¶)
 C:\\Users\\zhang\\Desktop\\easymesh\\G6.n  
 C:\\Users\\zhang\\Desktop\\easymesh\\G6.s  
 C:\\Users\\zhang\\Desktop\\easymesh\\G6.e  
-ÇëÔÚÏÂÃæ³ÌĞòÖĞËÑË÷G6£¬¸ü¸ÄÄúµÄÏàÓ¦ÎÄ¼şÃûºÍÎÄ¼şÎ»ÖÃ
-²¢ÇÒ¸ü¸Ä²ÎÊıkkµÄÖµ¡££¨ÂÛÎÄÖĞkÖµ£©£¬
-Éú³ÉÏàÓ¦µÄA£¬C FinF£¨ÓÒ¶ËÏî£©£¬M£¨MM£© ,L£¬ FinA(ÏµÊı¾ØÕó),Ğ´Èë³ÌĞòÖĞ¡£
-¿É¸Ä½ø³ÌĞò£º±¾³ÌĞò¶ÔÊı¾İ½á¹¹ÍêÈ«Ã»ÓĞÓÅ»¯£¬ÁíÍâ½¨Òé¸ÄÓÃmatlabÉú³ÉÍø¸ñ£¬ÒÔÏ¡ÊèĞÎÊ½´æ´¢¾ØÕó¡£
+è¯·åœ¨ä¸‹é¢ç¨‹åºä¸­æœç´¢G6ï¼Œæ›´æ”¹æ‚¨çš„ç›¸åº”æ–‡ä»¶åå’Œæ–‡ä»¶ä½ç½®
+å¹¶ä¸”æ›´æ”¹å‚æ•°kkçš„å€¼ã€‚ï¼ˆè®ºæ–‡ä¸­kå€¼ï¼‰ï¼Œ
+ç”Ÿæˆç›¸åº”çš„Aï¼ŒC FinFï¼ˆå³ç«¯é¡¹ï¼‰ï¼ŒMï¼ˆMMï¼‰ ,Lï¼Œ FinA(ç³»æ•°çŸ©é˜µ),å†™å…¥ç¨‹åºä¸­ã€‚
+å¯æ”¹è¿›ç¨‹åºï¼šæœ¬ç¨‹åºå¯¹æ•°æ®ç»“æ„å®Œå…¨æ²¡æœ‰ä¼˜åŒ–ï¼Œå¦å¤–å»ºè®®æ”¹ç”¨matlabç”Ÿæˆç½‘æ ¼ï¼Œä»¥ç¨€ç–å½¢å¼å­˜å‚¨çŸ©é˜µã€‚
 ********************************************************************************************************************************************
-ÒÔÏÂÊÇÌáÈ¡Êı¾İµÄmatlab³ÌĞò£»double U[8000]ÓÃ×÷¼ÆËãÎó²î£¬ ¿ÉÒÔ²»ÓÃ¹ÜËü¡£Èç¹ûÏë¼ÆËãÎó²î(err1)£¬ĞèÒªÏÈÔËĞĞÒ»±é³ÌĞò£¬ÔËĞĞmatlab¼ÆËã
+ä»¥ä¸‹æ˜¯æå–æ•°æ®çš„matlabç¨‹åºï¼›double U[8000]ç”¨ä½œè®¡ç®—è¯¯å·®ï¼Œ å¯ä»¥ä¸ç”¨ç®¡å®ƒã€‚å¦‚æœæƒ³è®¡ç®—è¯¯å·®(err1)ï¼Œéœ€è¦å…ˆè¿è¡Œä¸€éç¨‹åºï¼Œè¿è¡Œmatlabè®¡ç®—
 
-%MatLab£¬ R2014a
+%MatLabï¼Œ R2014a
 clear;clc;
 FinA=load('D:\FinA.txt');FinF=load('D:\FinF.txt');MM=load('D:\MM.txt');L=load('D:\L.txt');C=load('D:\C.txt');A=load('D:\A.txt');
 [n,m]=size(C);
 B=FinA(n+1:m+n,1:n);
 
 
-%ÒÔÏÂĞèÒªÔÚÕıÈ·Éú³ÉFinFµÄÇ°ÌáÏÂÊ¹ÓÃ£¬²ÎÔÄÉÏ¶ËËµÃ÷¡£
+%ä»¥ä¸‹éœ€è¦åœ¨æ­£ç¡®ç”ŸæˆFinFçš„å‰æä¸‹ä½¿ç”¨ï¼Œå‚é˜…ä¸Šç«¯è¯´æ˜ã€‚
 x=FinA\FinF;
 u=x(1:n);
-%pµÄÑéÖ¤:µ¼ÈëÊä³öµÄÎÄ¼şXn.txt£¬×¢ÒâÎÄ¼ş¼ĞÎ»ÖÃ
+%pçš„éªŒè¯:å¯¼å…¥è¾“å‡ºçš„æ–‡ä»¶Xn.txtï¼Œæ³¨æ„æ–‡ä»¶å¤¹ä½ç½®
 [xn1,xn2]=textread('D:\Xn.txt');
 perr=(1.-xn1.*xn1).*(1.-xn2.*xn2)-x((n+1):(m+n));
 
-%uµÄÑéÖ¤£»
-%½«uÖµĞ´Èëu.txt;
+%uçš„éªŒè¯ï¼›
+%å°†uå€¼å†™å…¥u.txt;
 dlmwrite('C:\Users\zhang\Desktop\easymesh\u.txt',u,'precision', '%.16f', ...
 'newline', 'pc');
 %dlmwrite('C:\Users\zhang\Desktop\easymesh\u.txt',u,'precision', '%.16f', 'newline', 'pc');
-%»òÕß  £º  save 'C:\Users\zhang\Desktop\easymesh\u.txt' u -ascii;
-È»ºóÔÙ´ÎÔËĞĞ¸Ã³ÌĞò£¬ÇóµÃÕıÈ·err1Öµ¡£×¢ÒâÃ¿´ÎËãÎó²î¶¼ĞèÒªÔËĞĞÒÔÉÏmatlab³ÌĞò£¨×¢Òâ³ÌĞòÖĞÒÔÏÂÓï¾ä£ºFileU=fopen("C:\\Users\\zhang\\Desktop\\easymesh\\u.txt" , "r")  ;£©
+%æˆ–è€…  ï¼š  save 'C:\Users\zhang\Desktop\easymesh\u.txt' u -ascii;
+ç„¶åå†æ¬¡è¿è¡Œè¯¥ç¨‹åºï¼Œæ±‚å¾—æ­£ç¡®err1å€¼ã€‚æ³¨æ„æ¯æ¬¡ç®—è¯¯å·®éƒ½éœ€è¦è¿è¡Œä»¥ä¸Šmatlabç¨‹åºï¼ˆæ³¨æ„ç¨‹åºä¸­ä»¥ä¸‹è¯­å¥ï¼šFileU=fopen("C:\\Users\\zhang\\Desktop\\easymesh\\u.txt" , "r")  ;ï¼‰
 
 
-×¢Òâ¿ÉÔÚmatlabÖĞĞŞ¸ÄkÖµ£¬È»ºóÒÀ¿¿Ò»ÏÂ´úÂë¼´¿ÉÍêÈ«Éú³ÉÓĞĞ§µÄ³ıFinFÒÔÍâÓĞĞ§µÄÊı¾İ¡£ÕâÑù½ö½ö¶Ôkk=0 ÔËĞĞ³ÌĞò¼´¿É¡£
-ÓÒ¶ËÏî¿É²ÉÓÃËæ»úÖµ¡£
+æ³¨æ„å¯åœ¨matlabä¸­ä¿®æ”¹kå€¼ï¼Œç„¶åä¾é ä¸€ä¸‹ä»£ç å³å¯å®Œå…¨ç”Ÿæˆæœ‰æ•ˆçš„é™¤FinFä»¥å¤–æœ‰æ•ˆçš„æ•°æ®ã€‚è¿™æ ·ä»…ä»…å¯¹kk=0 è¿è¡Œç¨‹åºå³å¯ã€‚
+å³ç«¯é¡¹å¯é‡‡ç”¨éšæœºå€¼ã€‚
 k=1.5;FinA(1:n,1:n)=A-k^2*MM;
 
 
@@ -55,16 +55,16 @@ MM=sparse(MM);L=sparse(L);A=sparse(A);B=sparse(B);C=sparse(C);invL=inv(L);invL=s
 
 
 ********************************************************************************************************************************************
-ÈôÏ£ÍûÏêÏ¸Àí½â±¾ÎÄËã·¨£º±¾ÎÄÊÇ¸ù¾İ Understanding and Implementing the Finite Element Method[Mark_S._Gockenbach] ´ËÊéĞ´³öpossion·½³Ì µÄ±ê×¼ÓĞÏŞÔªÀëÉ¢£¬
-È»ºóÔÚ´Ë»ù´¡ÉÏ£¬ÔËÓÃ  ¡¶µç´Å³¡ÓĞÏŞÔª·½·¨¡·-½ğ½¨Ãú  ÊéÖĞµÄ×îµÍ½×edgeÔªºÍ¸Õ¶È¾ØÕóÉú³É¼¼ÇÉ¼ÆËãÏà¹Ø½á¹û¡£½¨ÒéÄúÒ²ÒÀÕÕ´ËË³Ğò¼´¿ÉÀí½â³ÌĞò¡£
+è‹¥å¸Œæœ›è¯¦ç»†ç†è§£æœ¬æ–‡ç®—æ³•ï¼šæœ¬æ–‡æ˜¯æ ¹æ® Understanding and Implementing the Finite Element Method[Mark_S._Gockenbach] æ­¤ä¹¦å†™å‡ºpossionæ–¹ç¨‹ çš„æ ‡å‡†æœ‰é™å…ƒç¦»æ•£ï¼Œ
+ç„¶ååœ¨æ­¤åŸºç¡€ä¸Šï¼Œè¿ç”¨  ã€Šç”µç£åœºæœ‰é™å…ƒæ–¹æ³•ã€‹-é‡‘å»ºé“­  ä¹¦ä¸­çš„æœ€ä½é˜¶edgeå…ƒå’Œåˆšåº¦çŸ©é˜µç”ŸæˆæŠ€å·§è®¡ç®—ç›¸å…³ç»“æœã€‚å»ºè®®æ‚¨ä¹Ÿä¾ç…§æ­¤é¡ºåºå³å¯ç†è§£ç¨‹åºã€‚
 ********************************************************************************************************************************************
-Writed by ÕÅÊËÑó £¬£¨ÇëÔÚ´Ë´¦Ôö¼ÓÃû×ÖËµÃ÷£©£¬
-ÈÎºÎÒâ¼û£¬¸Ä½øºÍÑ¯ÎÊÇë·¢ÓÊ¼şÖÁ  hydzhang@hotmail.com £¬
+
+ä»»ä½•æ„è§ï¼Œæ”¹è¿›å’Œè¯¢é—®è¯·å‘é‚®ä»¶è‡³  hydzhang@hotmail.com ï¼Œ
 2015.10.
 
-ĞŞ¸Ä£º2015.12  Ôö¼Óerr1µÄ¼ÆËã
-ĞŞ¸Ä£º2016.3   
-ĞŞ¸Ä£º2017.2 --reconsidered after major revision 
+ä¿®æ”¹ï¼š2015.12  å¢åŠ err1çš„è®¡ç®—
+ä¿®æ”¹ï¼š2016.3   
+ä¿®æ”¹ï¼š2017.2 --reconsidered after major revision 
 
 */
 #include<math.h>
@@ -72,6 +72,8 @@ Writed by ÕÅÊËÑó £¬£¨ÇëÔÚ´Ë´¦Ôö¼ÓÃû×ÖËµÃ÷£©£¬
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h> 
+#include<errno.h>
+
 #ifndef max
 #define max(a,b)  (((a) > (b)) ? (a) : (b))
 #endif
@@ -87,41 +89,44 @@ Writed by ÕÅÊËÑó £¬£¨ÇëÔÚ´Ë´¦Ôö¼ÓÃû×ÖËµÃ÷£©£¬
 #define ERROR 0  
 #define TRUE 1  
 #define FALSE 0  
-int sign(int a){if (a>0)return 1;else return -1;}
 
 /* 
 #define interior 15526
 #define num_free 5087
  */
 /*=========================================================================*/
-#include<errno.h>
+
+
+int sign(int a){if (a>0)return 1;else return -1;}
+
 double doubleelem=0.0;
 #define MAXSIZE 42500*4  
-  //MAXSIZEĞèÒªµÈÓÚ»òÉÔÎ¢´óÓÚ±ßµÄ¸öÊı
+  //MAXSIZEéœ€è¦ç­‰äºæˆ–ç¨å¾®å¤§äºè¾¹çš„ä¸ªæ•°
 typedef int Status;  
 typedef double ElemType;  
-typedef struct{//ÈıÔª×é½á¹¹  
-    int i,j;//·ÇÁãÔªËØĞĞÏÂ±êºÍÁĞÏÂ±ê  
-    ElemType e;//·ÇÁãÔªËØÖµ  
+
+typedef struct{//ä¸‰å…ƒç»„ç»“æ„  
+    int i,j;//éé›¶å…ƒç´ è¡Œä¸‹æ ‡å’Œåˆ—ä¸‹æ ‡  
+    ElemType e;//éé›¶å…ƒç´ å€¼  
 }Triple;  
+
 typedef struct{  
-    Triple *data;//ÈıÔª×é±í£¬data[0]¿ÉÓÃ  
+    Triple *data;//ä¸‰å…ƒç»„è¡¨ï¼Œdata[0]å¯ç”¨  
 	
-    int tu;//¾ØÕóµÄĞĞÊı¡¢ÁĞÊıºÍ·ÇÁãÔªËØ¸öÊı  
+    int tu;//çŸ©é˜µçš„è¡Œæ•°ã€åˆ—æ•°å’Œéé›¶å…ƒç´ ä¸ªæ•°  
 }TSMatrix;  
   
   TSMatrix NewMatrix(int m,int n);    TSMatrix NewMatrixhalf(int m,int n);  
   TSMatrix NewMatrixhalfhalf(int m,int n);  
 
-    //ĞÂ½¨Ò»¸öÈıÔª×é±íÊ¾µÄÏ¡Êè¾ØÕó  
+    //æ–°å»ºä¸€ä¸ªä¸‰å…ƒç»„è¡¨ç¤ºçš„ç¨€ç–çŸ©é˜µ  
 Status InsertElem(TSMatrix *M,int row,int col,double e);  
-    //ÔÚÈıÔª×é±íÊ¾µÄÏ¡Êè¾ØÕóM£¬µÚ row ĞĞ£¬µÚ col ÁĞÎ»ÖÃ²åÈëÔªËØe  
-    //²åÈë³É¹¦£¬·µ»ØOK£¬·ñÔò·µ»ØERROR  
+    //åœ¨ä¸‰å…ƒç»„è¡¨ç¤ºçš„ç¨€ç–çŸ©é˜µMï¼Œç¬¬ row è¡Œï¼Œç¬¬ col åˆ—ä½ç½®æ’å…¥å…ƒç´ e  
+    //æ’å…¥æˆåŠŸï¼Œè¿”å›OKï¼Œå¦åˆ™è¿”å›ERROR  
 
 
 
  char name[40];
-
  char nname[40];
  char sname[40];
  char ename[40];
@@ -139,7 +144,7 @@ Status InsertElem(TSMatrix *M,int row,int col,double e);
  
 
 
-//ÒÔÏÂÈı¸öº¯ÊıÌáÈ¡ÎÄ¼şÖĞµÄ×Ö·û£¬ÕûÊı£¬ºÍstring, writed by  Bojan NICENO.
+//ä»¥ä¸‹ä¸‰ä¸ªå‡½æ•°æå–æ–‡ä»¶ä¸­çš„å­—ç¬¦ï¼Œæ•´æ•°ï¼Œå’Œstring, writed by  Bojan NICENO.
 int load_i(FILE *in, int *numb)
 {
  char dum, dummy[128];
@@ -185,8 +190,8 @@ int arg;
  {  	  
 	 printf(  "\n#*******************************************************");
      printf(  "\n");
-     printf(  "\n  ±¾³ÌĞòÎªÂÛÎÄ Preconditioners for the discretized time-harmonic .");   
-     printf(  "\n   Maxwell  equations in mixed form  µÄ»ìºÏÓĞÏŞÔªÊµÏÖ");
+     printf(  "\n  æœ¬ç¨‹åºä¸ºè®ºæ–‡ Preconditioners for the discretized time-harmonic .");   
+     printf(  "\n   Maxwell  equations in mixed form  çš„æ··åˆæœ‰é™å…ƒå®ç°");
 
      printf(  "\n");
      printf(  "\n     +--------------------------|");
@@ -204,9 +209,11 @@ int arg;
 	  
 
 
-  printf("±àÒëÍê³Éºó£¬ÇëÖØĞÂÔÚÃüÁîĞĞ ÏÂ´ò¿ª³ÌĞò£¬¸ñÊ½ÈçÏÂ£º\n1) ÊäÈë³ÌĞòÃû³ÆÖ®ºó£¬ÊäÈëÒÔ .n .s .eÎªºó×ºµÄÎÄ¼şµÄÎÄ¼şÃû£¨È·±£ÎÄ¼şÔÚµ±Ç°ÃüÁîĞĞËùÔÚÄ¿Â¼ÏÂ£©£¬ ²¢ÓÃ¿Õ¸ñ¸ô¿ª;\n\n2) Èç¹ûÈı¸öÎÄ¼şÍ¬Ãû£¬Çë²»´øºó×ºÊäÈëÒ»´Î¸ÃÃû³Æ¼´¿É¡£\n\nÄúÃ»ÓĞÌá¹©EasyMeshÉú³ÉµÄÍø¸ñÎÄ¼ş£¬³ÌĞò½«Ä¬ÈÏÑ°ÕÒÃû³ÆÎªG1.n G1.s G1.eµÄÎÄ¼ş \n\n\n\n");
-  system("pause");
-  name[0]='G';
+ printf("ç¼–è¯‘å®Œæˆåï¼Œè¯·é‡æ–°åœ¨å‘½ä»¤è¡Œ ä¸‹æ‰“å¼€ç¨‹åºï¼Œæ ¼å¼å¦‚ä¸‹ï¼š\n1) è¾“å…¥ç¨‹åºåç§°ä¹‹åï¼Œè¾“å…¥ä»¥ .n .s .eä¸ºåç¼€çš„æ–‡ä»¶çš„æ–‡ä»¶åï¼ˆç¡®ä¿æ–‡ä»¶åœ¨å½“å‰å‘½ä»¤è¡Œæ‰€åœ¨ç›®å½•ä¸‹ï¼‰ï¼Œ å¹¶ç”¨ç©ºæ ¼éš”å¼€;\n\n2) å¦‚æœä¸‰ä¸ªæ–‡ä»¶åŒåï¼Œè¯·ä¸å¸¦åç¼€è¾“å…¥ä¸€æ¬¡è¯¥åç§°å³å¯ã€‚\n\næ‚¨æ²¡æœ‰æä¾›EasyMeshç”Ÿæˆçš„ç½‘æ ¼æ–‡ä»¶ï¼Œç¨‹åºå°†é»˜è®¤å¯»æ‰¾åç§°ä¸ºG1.n G1.s G1.eçš„æ–‡ä»¶ \n\n\n\n");
+ getchar();
+ getchar();
+
+	 name[0]='G';
          name[1]='1';  name[2]='\0';
 
 
@@ -233,13 +240,13 @@ int len=strlen(name);
 }
 else
  if(argc!=4)
-  {printf("±àÒëÍê³Éºó£¬ÇëÖØĞÂÔÚÃüÁîĞĞ ÏÂ´ò¿ª³ÌĞò£¬¸ñÊ½ÈçÏÂ£º\n1) ÊäÈë³ÌĞòÃû³ÆÖ®ºó£¬ÊäÈëÒÔ .n .s .eÎªºó×ºµÄÎÄ¼şµÄÎÄ¼şÃû£¨È·±£ÎÄ¼şÔÚµ±Ç°ÃüÁîĞĞËùÔÚÄ¿Â¼ÏÂ£©£¬ ²¢ÓÃ¿Õ¸ñ¸ô¿ª;\n\n2) Èç¹ûÈı¸öÎÄ¼şÍ¬Ãû£¬Çë²»´øºó×ºÊäÈëÒ»´Î¸ÃÃû³Æ¼´¿É¡£\n\nÄúÃ»ÓĞÌá¹©EasyMeshÉú³ÉµÄÍø¸ñÎÄ¼ş.\n");
+  {printf("ç¼–è¯‘å®Œæˆåï¼Œè¯·é‡æ–°åœ¨å‘½ä»¤è¡Œ ä¸‹æ‰“å¼€ç¨‹åºï¼Œæ ¼å¼å¦‚ä¸‹ï¼š\n1) è¾“å…¥ç¨‹åºåç§°ä¹‹åï¼Œè¾“å…¥ä»¥ .n .s .eä¸ºåç¼€çš„æ–‡ä»¶çš„æ–‡ä»¶åï¼ˆç¡®ä¿æ–‡ä»¶åœ¨å½“å‰å‘½ä»¤è¡Œæ‰€åœ¨ç›®å½•ä¸‹ï¼‰ï¼Œ å¹¶ç”¨ç©ºæ ¼éš”å¼€;\n\n2) å¦‚æœä¸‰ä¸ªæ–‡ä»¶åŒåï¼Œè¯·ä¸å¸¦åç¼€è¾“å…¥ä¸€æ¬¡è¯¥åç§°å³å¯ã€‚\n\næ‚¨æ²¡æœ‰æä¾›EasyMeshç”Ÿæˆçš„ç½‘æ ¼æ–‡ä»¶.\n");
 
-	printf("\nÈ±ÉÙ.nÎÄ¼şÃû²ÎÊı£¬ÇëÊäÈë:");
+	printf("\nç¼ºå°‘.næ–‡ä»¶åå‚æ•°ï¼Œè¯·è¾“å…¥:");
 		scanf("%s",nname);
-			printf("È±ÉÙ.sÎÄ¼şÃû²ÎÊı£¬ÇëÊäÈë:");
+			printf("ç¼ºå°‘.sæ–‡ä»¶åå‚æ•°ï¼Œè¯·è¾“å…¥:");
 		scanf("%s",sname);
-			printf("È±ÉÙ.eÎÄ¼şÃû²ÎÊı£¬ÇëÊäÈë:");
+			printf("ç¼ºå°‘.eæ–‡ä»¶åå‚æ•°ï¼Œè¯·è¾“å…¥:");
 		scanf("%s",ename);
 
  }
@@ -251,7 +258,7 @@ else
 	    strcpy(ename,     argv[3]);
   }
    
-//double pp=0.0;//Ô­·½³ÌpÏîµÄÏµÊı£¬0»ò1
+//double pp=0.0;//åŸæ–¹ç¨‹pé¡¹çš„ç³»æ•°ï¼Œ0æˆ–1
    
 
 
@@ -261,7 +268,7 @@ FILE *nodes_file=NULL;FILE *sides_file=NULL,*elements_file=NULL;
 int num_free=0,num_con=0;
   
   
- //ÒÔÏÂ×ª»»Íø¸ñ¸ñÊ½¸øMFEMÊ¹ÓÃ 
+ //ä»¥ä¸‹è½¬æ¢ç½‘æ ¼æ ¼å¼ç»™MFEMä½¿ç”¨ 
   FILE *Meshtrans=NULL;
   Meshtrans=fopen("D:\\zsy\\Meshtrans.mesh", "w");
  if (!Meshtrans)
@@ -279,13 +286,13 @@ fputc('\n',Meshtrans );fputc('\n',Meshtrans );fputc('\n',Meshtrans );fputc('\n',
 
 	fprintf(Meshtrans, "vertices");fputc('\n',Meshtrans );
 	
-//ÒÔÏÂÎª.nÎÄ¼şµÄÌáÈ¡.*******************************************************************************************************************************************************************************  
+//ä»¥ä¸‹ä¸º.næ–‡ä»¶çš„æå–.*******************************************************************************************************************************************************************************  
 
 nodes_file=fopen(nname,"r");
 
  if(!nodes_file)                                                                       
   {   fprintf(stderr, "%s \n", strerror(errno));
-   printf("ÇëÈ·±£ÊÇÔÚÍø¸ñÎÄ¼şËùÔÚÄ¿Â¼ÏÂ´ò¿ªÃüÁîĞĞ£»\nCannot open  nodes file  %s\n",nname);                                                 
+   printf("è¯·ç¡®ä¿æ˜¯åœ¨ç½‘æ ¼æ–‡ä»¶æ‰€åœ¨ç›®å½•ä¸‹æ‰“å¼€å‘½ä»¤è¡Œï¼›\nCannot open  nodes file  %s\n",nname);                                                 
    return -1;                                                                   
   }        
   
@@ -313,7 +320,7 @@ struct node
        load_d(nodes_file, &nodes[i].x);
        load_d(nodes_file, &nodes[i].y);
 	   	  fprintf(Meshtrans, "%f	%f",nodes[i].x,nodes[i].y);fputc('\n',Meshtrans );
-       load_i(nodes_file, &nodes[i].ptr);//¼ÇÂ¼½Úµã×ø±ê;
+       load_i(nodes_file, &nodes[i].ptr);//è®°å½•èŠ‚ç‚¹åæ ‡;
 
 	
 	   if(nodes[i].ptr==FREE) {num_free++;}
@@ -339,7 +346,7 @@ outXn = fopen("D:\\zsy\\Xn.txt", "w");
     {
         perror("cannot open file  outXn");
         
-    } //Êä³ö×ÔÓÉ±äÁ¿µÃ×ø±êÖµ
+    } //è¾“å‡ºè‡ªç”±å˜é‡å¾—åæ ‡å€¼
 	 
 
 
@@ -352,14 +359,14 @@ for(i=0;i<num_nodes;i++)
 	if(nodes[i].ptr==FREE)
 	      {nodes[i].ptr=num_freedummy+1;
           nodeptrs.fnodeptrs[num_freedummy]=i;
-		  fprintf(outXn, "%16.12f  %16.12f\n ", nodes[i].x,nodes[i].y);   //Êä³ö×ÔÓÉ±äÁ¿µÄ×ø±êÖµ
+		  fprintf(outXn, "%16.12f  %16.12f\n ", nodes[i].x,nodes[i].y);   //è¾“å‡ºè‡ªç”±å˜é‡çš„åæ ‡å€¼
           num_freedummy++;}
 	  
 	   
 	      else  {nodes[i].ptr=-(i-num_freedummy+1);
-	            nodeptrs.cnodeptrs[i-num_freedummy]=i;//¼ÇÂ¼½ÚµãÖ¸ÕëºÍ×ÔÓÉ½Úµã,Ç¿ÖÆ½Úµã;¸ºÖµ±íÊ¾ÅÅĞòÎª¶àÉÙÎ»µÄÇ¿ÖÆ½Úµã
+	            nodeptrs.cnodeptrs[i-num_freedummy]=i;//è®°å½•èŠ‚ç‚¹æŒ‡é’ˆå’Œè‡ªç”±èŠ‚ç‚¹,å¼ºåˆ¶èŠ‚ç‚¹;è´Ÿå€¼è¡¨ç¤ºæ’åºä¸ºå¤šå°‘ä½çš„å¼ºåˆ¶èŠ‚ç‚¹
 		        /* g[i-num_freedummy]=sin(PI*nodes[i].x)*sin(PI*nodes[i].y)+nodes[i].x; */}
-}    //´Ë´¦ÎªDirichletÌõ¼şg±í´ïÊ½µÄÊäÈëµã.nodes[i].x node[i].yÎª×ø±êÖµ.
+}    //æ­¤å¤„ä¸ºDirichletæ¡ä»¶gè¡¨è¾¾å¼çš„è¾“å…¥ç‚¹.nodes[i].x node[i].yä¸ºåæ ‡å€¼.
 	   
 
 fclose(outXn);
@@ -379,7 +386,7 @@ fclose(nodes_file)	;
 
 
 	fprintf(Meshtrans, "boundary");fputc('\n',Meshtrans );
-//ÒÔÏÂÎª.sÎÄ¼şµÄÌáÈ¡.*******************************************************************************************************************************************************************************  
+//ä»¥ä¸‹ä¸º.sæ–‡ä»¶çš„æå–.*******************************************************************************************************************************************************************************  
 
 int num_sides;
 sides_file=fopen(sname,"r");
@@ -398,7 +405,7 @@ load_i(sides_file,&num_sides);
   
 struct sid
 { int x;int y;int p,q;int ptr;
-}sides[num_sides];//p,qÖ¸Ê¾±ßµÄÁ½±ßµÄelements.
+}sides[num_sides];//p,qæŒ‡ç¤ºè¾¹çš„ä¸¤è¾¹çš„elements.
 
 int interiorsides[num_sides];
 
@@ -425,7 +432,7 @@ for(i=0;i<num_sides;i++)
 {
 	  load_s(sides_file, dummy1);     
        load_i(sides_file, &sides[i].x);
-       load_i(sides_file, &sides[i].y);//¼ÇÂ¼½ÚµãÖ¸±ê;
+       load_i(sides_file, &sides[i].y);//è®°å½•èŠ‚ç‚¹æŒ‡æ ‡;
 	   
 	   load_i(sides_file, &dummyea);
 	   load_i(sides_file, &dummyeb);	
@@ -487,7 +494,7 @@ fclose(outXs);
  
  	fprintf(Meshtrans, "elements");fputc('\n',Meshtrans );
 
-//ÒÔÏÂÎª.eÎÄ¼şµÄÌáÈ¡.*******************************************************************************************************************************************************************************  	  
+//ä»¥ä¸‹ä¸º.eæ–‡ä»¶çš„æå–.*******************************************************************************************************************************************************************************  	  
 
 int dummya ,dummyb,dummyc,dummyd,num_elements;
 elements_file=fopen(ename,"r");
@@ -527,11 +534,11 @@ elem[num_elements];
       load_i(elements_file,  &dummyb);   
       load_i(elements_file,  &dummyc); 
 	  
-//ÒÔÏÂÓÃ°´ÄæÊ±ÕëÏà»¥ÏÎ½ÓµÄË³Ğò½«Èı±ß¼ÇÂ¼ÓÚelemÖĞ,¸ºÊı´ú±í·½ÏòÓë±ßµÄ±¾À´µÄ·½ÏòÏà·´	  
+//ä»¥ä¸‹ç”¨æŒ‰é€†æ—¶é’ˆç›¸äº’è¡”æ¥çš„é¡ºåºå°†ä¸‰è¾¹è®°å½•äºelemä¸­,è´Ÿæ•°ä»£è¡¨æ–¹å‘ä¸è¾¹çš„æœ¬æ¥çš„æ–¹å‘ç›¸å	  
 	  
 if(sides[dummya].y!=sides[dummyb].x&&sides[dummya].x!=sides[dummyb].x)//if  dummya  intersects with dummyb at dummyb.y
     {ss=(nodes[sides[dummya].x].x-nodes[sides[dummyb].x].x)*(nodes[sides[dummya].y].y-nodes[sides[dummyb].x].y)-(nodes[sides[dummya].x].y-nodes[sides[dummyb].x].y)*(nodes[sides[dummya].y].x-nodes[sides[dummyb].x].x);
-    if(ss>0)//ÅĞ¶ÏµãÔÚÏòÁ¿µÄ×ó²à
+    if(ss>0)//åˆ¤æ–­ç‚¹åœ¨å‘é‡çš„å·¦ä¾§
 	        {if(sides[dummya].y==sides[dummyb].y)
 				 { elem[i].x=dummya+1; elem[i].y=-dummyb-1;   if(sides[dummyb].x==sides[dummyc].x) elem[i].z=dummyc+1;else elem[i].z=-dummyc-1;}
 			else { elem[i].x=dummya+1; elem[i].z=dummyb+1;   if(sides[dummyb].x==sides[dummyc].y) elem[i].y=dummyc+1;else elem[i].y=-dummyc-1; }
@@ -545,7 +552,7 @@ if(sides[dummya].y!=sides[dummyb].x&&sides[dummya].x!=sides[dummyb].x)//if  dumm
     }
 else 
    {ss=(nodes[sides[dummya].x].x-nodes[sides[dummyb].y].x)*(nodes[sides[dummya].y].y-nodes[sides[dummyb].y].y)-(nodes[sides[dummya].x].y-nodes[sides[dummyb].y].y)*(nodes[sides[dummya].y].x-nodes[sides[dummyb].y].x);
-    if(ss>0)//ÅĞ¶ÏµãÔÚÏòÁ¿µÄ×ó²à
+    if(ss>0)//åˆ¤æ–­ç‚¹åœ¨å‘é‡çš„å·¦ä¾§
 	        {if(sides[dummya].y==sides[dummyb].x)
 				 { elem[i].x=dummya+1; elem[i].y=dummyb+1;   if(sides[dummyb].y==sides[dummyc].x) elem[i].z=dummyc+1;else elem[i].z=-dummyc-1;}
 			else { elem[i].x=dummya+1; elem[i].z=-dummyb-1;   if(sides[dummyb].y==sides[dummyc].y) elem[i].y=dummyc+1;else elem[i].y=-dummyc-1; }
@@ -573,7 +580,7 @@ else
 
 
 	
-	 //µ¥ÔªÉÏµÄ±ß,Õı¸º±êÃ÷·½Ïò.
+	 //å•å…ƒä¸Šçš„è¾¹,æ­£è´Ÿæ ‡æ˜æ–¹å‘.
 
 	  
 	  load_s(elements_file, dummy1); 
@@ -584,14 +591,14 @@ else
   fclose(Meshtrans);
 
   fclose(elements_file);
-  printf("¹²ÓĞµã:%d\n±ß:%d\nÔªËØ:%d\n×ÔÓÉ±ß½ç±ß:%d\n×ÔÓÉ½Úµãm=%d\nÄÚ²¿±ßn=%d\nn+m=%d\n",num_nodes,num_sides,num_elements,num_fbe,num_free,interior,num_free+interior);   system("pause");
+  printf("å…±æœ‰ç‚¹:%d\nè¾¹:%d\nå…ƒç´ :%d\nè‡ªç”±è¾¹ç•Œè¾¹:%d\nè‡ªç”±èŠ‚ç‚¹m=%d\nå†…éƒ¨è¾¹n=%d\nn+m=%d\n",num_nodes,num_sides,num_elements,num_fbe,num_free,interior,num_free+interior);   system("pause");
 
    
-//Êı¾İÌáÈ¡Íê±Ï,ÒÔÏÂÎªËã·¨µÚÒ»²¿·Ö:¸Õ¶È¾ØÕóµÄ¼ÆËã
+//æ•°æ®æå–å®Œæ¯•,ä»¥ä¸‹ä¸ºç®—æ³•ç¬¬ä¸€éƒ¨åˆ†:åˆšåº¦çŸ©é˜µçš„è®¡ç®—
 
-//¶¨Òåcurl-curlÏ¡Êè¾ØÕó£¬µÚÒ»ĞĞÎªĞĞ±ê µÚ¶şĞĞÎªÁĞ±ê£¬µÚÈıĞĞÎªÖµ,²»ÅÅĞò£¬²»ÔÊĞíÖØ¸´¡£
-//×¢Òâ£ºA	L ML MM ¼ÆËãµÄ¶¼ÊÇÖ»ÓĞÉÏÈı½Ç²¿·Ö
-//¶øPcurl, B¼ÆËãµÄÊÇÍêÕû²¿·Ö
+//å®šä¹‰curl-curlç¨€ç–çŸ©é˜µï¼Œç¬¬ä¸€è¡Œä¸ºè¡Œæ ‡ ç¬¬äºŒè¡Œä¸ºåˆ—æ ‡ï¼Œç¬¬ä¸‰è¡Œä¸ºå€¼,ä¸æ’åºï¼Œä¸å…è®¸é‡å¤ã€‚
+//æ³¨æ„ï¼šA	L ML MM è®¡ç®—çš„éƒ½æ˜¯åªæœ‰ä¸Šä¸‰è§’éƒ¨åˆ†
+//è€ŒPcurl, Bè®¡ç®—çš„æ˜¯å®Œæ•´éƒ¨åˆ†
 	
 
 
@@ -612,13 +619,8 @@ TSMatrix  ML=NewMatrixhalfhalf(num_free,num_free);
 
 double* FinF=NULL;
 	FinF = (double *)malloc(sizeof(double)*(interior+num_free)); memset(FinF,0,(interior+num_free)*sizeof(double)); 
-//double FinA[interior+num_free][interior+num_free],FinF[interior+num_free];memset(FinA,0,sizeof(double)*(interior+num_free)*(interior+num_free));memset(FinF,0,sizeof(double)*(interior+num_free));//Êä³ö×îÖÕ¾ØÕó,Ö»ÊÇÓÃÓÚ·ÅÈëmatlabÑéÖ¤Ëã·¨.Êµ¼ÊĞèÒª¸ø³öÏ¡Êè´æ´¢.
 
 
-
-
-//memset(A,0,sizeof(double)*interior*interior);memset(MM,0,sizeof(double)*interior*interior);memset(B,0,sizeof(double)*num_free*interior);
-  
 int eptr[3]={0},indices[3]={0},ptrs[3]={0};
 double delta,coords[3][2],I,x0,y0,invM[2][3];double det,G[3][3];
 double kk=0;int s,r,ceshi=-1;double err1=0;
@@ -644,14 +646,8 @@ int k;
 
 
 
-
-
-
-
-
-
 double localength[3];
-double aaa[3];//¼ÇÂ¼mÄæ¾ØÕóµÄÊ×ĞĞ,Ò²¾ÍÊÇÓĞÏŞÔª»ùµÄ³£ÊıÏî
+double aaa[3];//è®°å½•mé€†çŸ©é˜µçš„é¦–è¡Œ,ä¹Ÿå°±æ˜¯æœ‰é™å…ƒåŸºçš„å¸¸æ•°é¡¹
 double fff[3][3];double emm[3][3];
 memset(emm,0,sizeof(emm));
 
@@ -664,12 +660,12 @@ double gg[interior]; memset(gg,0,sizeof(double)*interior);
 
 
 
-for(k=0;k<num_elements;k++)  //¶ÔÈı½Çµ¥ÔªÑ­»·
-//ÒÔÏÂÎªalgorithm 7.1 *************************
+for(k=0;k<num_elements;k++)  //å¯¹ä¸‰è§’å•å…ƒå¾ªç¯
+//ä»¥ä¸‹ä¸ºalgorithm 7.1 *************************
 {	
 
 
-eptr[0]=elem[k].x;//ÈıÌõ±ß,eptrÖ¸Ê¾ÕæÊµµÄÈı½ÇĞÎÄæÊ±ÕëÈı±ß}
+eptr[0]=elem[k].x;//ä¸‰æ¡è¾¹,eptræŒ‡ç¤ºçœŸå®çš„ä¸‰è§’å½¢é€†æ—¶é’ˆä¸‰è¾¹}
 eptr[1]=elem[k].y;
 eptr[2]=elem[k].z;
 
@@ -685,11 +681,11 @@ if(eptr[2]>0) {if(sides[eptr[2]-1].ptr>0) localength[2]=length[sides[eptr[2]-1].
 else {if(sides[-eptr[2]-1].ptr>0) localength[2]=length[sides[-eptr[2]-1].ptr-1]; else localength[2]=-1.0;}
 
 for(i=0;i<3;i++)
-             {ptrs[i]=nodes[indices[i]].ptr;}//´Ë´¦ptrs¼Ì³ĞptrµÃÌØĞÔ Ã»ÓĞ¸ü¸Ä.
+             {ptrs[i]=nodes[indices[i]].ptr;}//æ­¤å¤„ptrsç»§æ‰¿ptrå¾—ç‰¹æ€§ æ²¡æœ‰æ›´æ”¹.
 
 for(i=0;i<3;i++)
              {coords[i][0]=nodes[indices[i]].x;
-		 }//ÈıÌõ±ß}
+		 }//ä¸‰æ¡è¾¹}
 
 
 
@@ -700,7 +696,7 @@ for(i=0;i<3;i++)
 	
 
 
-//*****************************¾ØÕóÄæµÄ¼ÆËã
+//*****************************çŸ©é˜µé€†çš„è®¡ç®—
 
 det=coords[1][0]*coords[2][1] -    coords[2][0]*coords[1][1]  + coords[2][0]*coords[0][1]-coords[0][0]*coords[2][1]  + coords[0][0]*coords[1][1] - coords[1][0]*coords[0][1] ;
 //printf("%.12f aaaaa",det);system("pause");  
@@ -723,36 +719,9 @@ aaa[2]=(coords[0][0]*coords[1][1]-coords[0][1]*coords[1][0])/det;
   
   
   
-  //if(abs(aaa[0]+aaa[2]+aaa[1]-1)>0.00000000000001) {printf("%f  s  s ",aaa[0]+aaa[2]+aaa[1]);system("pause");}
-/* 
-
-FILE *outn;
+ 
 
 
-    outn = fopen("D:\\zsy\\length.txt", "w");
- if (!outn)
-    {
-        perror("cannot open file");
-        
-    } 
-	  for (i = 0; i<3; i++)
-   { for (j = 0; j<2; j++)
-       
-	fprintf(outn, "%f ", coords[i][j]); fputc('\n',outn);
-	
-	
-	
-	}
-        
-    
-    fclose(outn);system("pause");  */
-
-
-
-//ceshi :delta=0.5*(aaa[0]+aaa[1]+aaa[1]);
-/*     system("pause");
-	if(abs(1-(aaa[0]+aaa[1]+aaa[2]))<0.001) printf("right ");else printf("cuowu ");
-	system("pause"); */
 
 //******************************algorithm 7.2
 
@@ -772,35 +741,12 @@ FILE *outn;
 		    
   
   
-/*   
-  printf("\n  %d Run read with the command: \n read namen.n names.s namee.e\n ",k);system("pause");
-
- 
-FILE *outn;
-
-
-    outn = fopen("D:\\zsy\\Fn.txt", "w");
- if (!outn)
-    {
-        perror("cannot open file");
-        
-    } 
-	  for (i = 0; i<3; i++)
-    {for (j = 0; j<3; j++){
-       
-	fprintf(outn, "%f ",G[i][j]);}
-        
-        fputc('\n',outn);
-    }
-    fclose(outn);
-system("pause");
-   */
   
 delta=0.5 * det;  
 /* printf("%f ",delta);system("pause"); */
 
   x0=(coords[0][0]+coords[1][0]+ coords[2][0])/3.0       ;y0=(coords[0][1]+coords[1][1]+ coords[2][1])/3.0 ;
-//ÏµÊıkµÄÊäÈëµã----------------------------------------------------------------------------------------------------------------------------------------------------------
+//ç³»æ•°kçš„è¾“å…¥ç‚¹----------------------------------------------------------------------------------------------------------------------------------------------------------
 I=delta;
    
   
@@ -810,7 +756,7 @@ I=delta;
 	  {if(ptrs[r]>0&&ptrs[s]>0)
 		  {		  i=min(ptrs[r],ptrs[s])-1;j=max(ptrs[r],ptrs[s])-1;
 		        doubleelem=G[r][s]*I; if ( !InsertElem( &L,i,j, doubleelem) )
-  { printf("\nError:L²åÈëÊ§°Ü\n");  
+  { printf("\nError:Læ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }  }
 	    
@@ -835,7 +781,7 @@ I=delta;
  1.0/3*(         (aaa[r]+invM[0][r]* (1.0/6*coords[0][0]+1.0/6*coords[1][0]+2.0/3*coords[2][0]) +invM[1][r]*(1.0/6*coords[0][1]+1.0/6*coords[1][1]+2.0/3*coords[2][1]) )*  
                   (aaa[s]+invM[0][s]* (1.0/6*coords[0][0]+1.0/6*coords[1][0]+2.0/3*coords[2][0]) +invM[1][s]*(1.0/6*coords[0][1]+1.0/6*coords[1][1]+2.0/3*coords[2][1]) )	   )	
                 )	; if ( !InsertElem( &ML,i,j, doubleelem) )
-  { printf("\nError:ML²åÈëÊ§°Ü\n");  
+  { printf("\nError:MLæ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }  
 				  
@@ -847,20 +793,11 @@ I=delta;
   
 
   
-  //load¾ØÕóµÄ³õÊ¼»¯ºÍ¼ÆËã.*******************************************************************************************************************************************************************************  	  
+  //loadçŸ©é˜µçš„åˆå§‹åŒ–å’Œè®¡ç®—.*******************************************************************************************************************************************************************************  	  
 
 
 
-//ÒÔÏÂÎªalgorithm 7.5µÄµÚÒ»²¿·Ö************************************
-/* for(s=0;s<3;s++)
-
-      {if(localength[s]>=0)
-		  {i=sides[abs(eptr[s])-1].ptr-1;
-	       
-	          gg[i]+= delta*sign(eptr[s])*(( 2-(kk*kk+2*x0)*(1-y0*y0) )  *(aaa[s]*invM[0][(1+s)%3]-aaa[(1+s)%3]*invM[0][s]+y0*(invM[1][s]*invM[0][(1+s)%3]-invM[1][(1+s)%3]*invM[0][s]))	+
-               ( 2-(kk*kk+2*y0)*(1-x0*x0) )             * (aaa[s]*invM[1][(1+s)%3]-aaa[(1+s)%3]*invM[1][s]-x0*(invM[1][s]*invM[0][(1+s)%3]-invM[1][(1+s)%3]*invM[0][s])	)   );
-           }
-     } */
+//ä»¥ä¸‹ä¸ºalgorithm 7.5çš„ç¬¬ä¸€éƒ¨åˆ†************************************
   
   for(s=0;s<3;s++)
 
@@ -884,7 +821,7 @@ for(r=0;r<3;r++)
 		  if(localength[r]>=0&&localength[s]>=0)
 		  {/* printf("r=%d;s= %d;",r,s); */i=min(sides[abs(eptr[r])-1].ptr-1,sides[abs(eptr[s])-1].ptr-1);j=max(sides[abs(eptr[r])-1].ptr-1,sides[abs(eptr[s])-1].ptr-1);/* printf("%d %d",i,j);system("pause"); */
 		doubleelem= sign(eptr[r])*sign(eptr[s])/(delta);/* printf("%f",A[i][j]); */ if ( !InsertElem( &A,i,j, doubleelem) )
-  { printf("\nError:A²åÈëÊ§°Ü\n");  
+  { printf("\nError:Aæ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }   }
 	   
@@ -922,7 +859,7 @@ for(r=0;r<3;r++)
 	 
 		  {		  i=min(sides[abs(eptr[r])-1].ptr-1,sides[abs(eptr[s])-1].ptr-1);j=max(sides[abs(eptr[r])-1].ptr-1,sides[abs(eptr[s])-1].ptr-1);
   doubleelem=emm[r][s]; if ( !InsertElem( &MM,i,j, doubleelem) )
-  { printf("\nError:²åÈëÊ§°Ü\n");  
+  { printf("\nError:æ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }   }
       }
@@ -951,7 +888,7 @@ for(r=0;r<3;r++)
 	       i=ptrs[r]-1;
 	       doubleelem= delta*sign(eptr[s])*(  invM[0][r]*(aaa[s]*invM[0][(1+s)%3]-aaa[(1+s)%3]*invM[0][s]+y0*(invM[1][s]*invM[0][(1+s)%3]-invM[1][(1+s)%3]*invM[0][s]))	+
 	  invM[1][r]* (aaa[s]*invM[1][(1+s)%3]-aaa[(1+s)%3]*invM[1][s]+x0*(invM[1][(1+s)%3]*invM[0][s]-invM[1][s]*invM[0][(1+s)%3])	)   ); if ( !InsertElem( &B,i,j, doubleelem) )
-  { printf("\nError:²åÈëÊ§°Ü\n");  
+  { printf("\nError:æ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }   
 	      }
@@ -960,23 +897,15 @@ for(r=0;r<3;r++)
   
 
 
- // err1+=(sqrt(pow(1-y0*y0-umid[0],2)+pow(1-x0*x0-umid[1],2)))/sqrt(pow(1-y0*y0,2)+pow(1-x0*x0,2))/(num_elements); // printf(";%f,%f;%f,%f;%f\n",umid[0],umid[1],1-y0*y0,1-x0*x0,(fabs(1-y0*y0-umid[0])+fabs(1-x0*x0-umid[1]))/(1-y0*y0+1-x0*x0));system("pause");
-
-
-//Èı½Ç»ùÔª¶Ô¸Õ¶È¾ØÕóÑ­»·Íê±Ï,µ«ÊÇÍ¬Ê±Òª¶Ôload¾ØÕóÑ­»·,ËùÒÔ²»¼Ó´óÀ¨ºÅ 
+//ä¸‰è§’åŸºå…ƒå¯¹åˆšåº¦çŸ©é˜µå¾ªç¯å®Œæ¯•,ä½†æ˜¯åŒæ—¶è¦å¯¹loadçŸ©é˜µå¾ªç¯,æ‰€ä»¥ä¸åŠ å¤§æ‹¬å· 
  
 
   
 
-  
-  
-/* 	printf("k=%d   %f   gg=%f",k,invM[0][(1+2)%3],gg[k]);system("pause");
- */
 
+}    //å¯¹ä¸‰è§’åŸºå…ƒå¾ªç¯å®Œæ¯•.
 
-}    //¶ÔÈı½Ç»ùÔªÑ­»·Íê±Ï.
-
-//ÒÔÏÂ¼ÆËãC
+//ä»¥ä¸‹è®¡ç®—C
 
 
 
@@ -1140,13 +1069,13 @@ free(ML.data);
 TSMatrix C=NewMatrixhalfhalf(interior,num_free);
 TSMatrix Pcurl=NewMatrix(interior,2*num_free);
 
- for(i=0;i<interior;i++)//±ßÑ­»·
+ for(i=0;i<interior;i++)//è¾¹å¾ªç¯
  {
-	//ptr>0Ö¸Ê¾×ÔÓÉ½Úµã
+	//ptr>0æŒ‡ç¤ºè‡ªç”±èŠ‚ç‚¹
 if(nodes[sides[interiorsides[i]].x].ptr>0)
 {
  if ( !InsertElem( &C,i,nodes[sides[interiorsides[i]].x].ptr-1, -1.0) )
-  { printf("\nError:²åÈëÊ§°Ü\n");  
+  { printf("\nError:æ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }   
 }
@@ -1154,25 +1083,25 @@ if(nodes[sides[interiorsides[i]].x].ptr>0)
 if(nodes[sides[interiorsides[i]].y].ptr>0)
 {
  if ( !InsertElem( &C,i,nodes[sides[interiorsides[i]].y].ptr-1, 1.0) )
-  { printf("\nError:²åÈëÊ§°Ü\n");  
+  { printf("\nError:æ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }   
  }
 }
 
-//±ßÑ­»·
+//è¾¹å¾ªç¯
  for(i=0;i<interior;i++)
  {
 if(nodes[sides[interiorsides[i]].x].ptr>0)
 {doubleelem=0.5*(nodes[sides[interiorsides[i]].y].x-nodes[sides[interiorsides[i]].x].x);
  if ( !InsertElem( &Pcurl,i,nodes[sides[interiorsides[i]].x].ptr-1, doubleelem) )
-  { printf("\nError:²åÈëÊ§°Ü\n");  
+  { printf("\nError:æ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }   
 doubleelem=0.5*(nodes[sides[interiorsides[i]].y].y-nodes[sides[interiorsides[i]].x].y);
 
  if ( !InsertElem( &Pcurl,i,nodes[sides[interiorsides[i]].x].ptr-1+num_free, doubleelem) )
-  { printf("\nError:²åÈëÊ§°Ü\n");  
+  { printf("\nError:æ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }   
 }
@@ -1183,13 +1112,13 @@ if(nodes[sides[interiorsides[i]].y].ptr>0)
 
 doubleelem=0.5*(nodes[sides[interiorsides[i]].y].x-nodes[sides[interiorsides[i]].x].x);
  if ( !InsertElem( &Pcurl,i,nodes[sides[interiorsides[i]].y].ptr-1, doubleelem) )
-  { printf("\nError:²åÈëÊ§°Ü\n");  
+  { printf("\nError:æ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }   
 doubleelem=0.5*(nodes[sides[interiorsides[i]].y].y-nodes[sides[interiorsides[i]].x].y);
 
  if ( !InsertElem( &Pcurl,i,nodes[sides[interiorsides[i]].x].ptr-1+num_free, doubleelem) )
-  { printf("\nError:²åÈëÊ§°Ü\n");  
+  { printf("\nError:æ’å…¥å¤±è´¥\n");  
         return ERROR;  
     }  
 }
@@ -1260,7 +1189,7 @@ return 0;
 
   
 TSMatrix NewMatrix(int m,int n){  
-    //ĞÂ½¨Ò»¸öÈıÔª×é±íÊ¾µÄÏ¡Êè¾ØÕó  
+    //æ–°å»ºä¸€ä¸ªä¸‰å…ƒç»„è¡¨ç¤ºçš„ç¨€ç–çŸ©é˜µ  
 Triple* adata=NULL;
 
 	adata = (Triple *)malloc(sizeof(Triple)*MAXSIZE); memset(adata,0,MAXSIZE*sizeof(Triple)); 
@@ -1275,7 +1204,7 @@ M.data=	adata;
 
 
   TSMatrix NewMatrixhalf(int m,int n){  
-    //ĞÂ½¨Ò»¸öÈıÔª×é±íÊ¾µÄÏ¡Êè¾ØÕó  
+    //æ–°å»ºä¸€ä¸ªä¸‰å…ƒç»„è¡¨ç¤ºçš„ç¨€ç–çŸ©é˜µ  
 Triple* adata=NULL;
 
 	adata = (Triple *)malloc((sizeof(Triple)*MAXSIZE/2)); memset(adata,0,(MAXSIZE*sizeof(Triple)/2)); 
@@ -1289,7 +1218,7 @@ M.data=	adata;
 }  
   
   TSMatrix NewMatrixhalfhalf(int m,int n){  
-    //ĞÂ½¨Ò»¸öÈıÔª×é±íÊ¾µÄÏ¡Êè¾ØÕó  
+    //æ–°å»ºä¸€ä¸ªä¸‰å…ƒç»„è¡¨ç¤ºçš„ç¨€ç–çŸ©é˜µ  
 Triple* adata=NULL;
 
 	adata = (Triple *)malloc((sizeof(Triple)*MAXSIZE/4)); memset(adata,0,(MAXSIZE*sizeof(Triple)/4)); 
@@ -1306,14 +1235,14 @@ M.data=	adata;
   
   
 Status InsertElem(TSMatrix *M,int row,int col,ElemType e){  
-    //ÔÚÈıÔª×é±íÊ¾µÄÏ¡Êè¾ØÕóM£¬µÚ row+1 ĞĞ£¬µÚ col+1 ÁĞÎ»ÖÃ²åÈëÔªËØe  
-    //²åÈë³É¹¦£¬·µ»ØOK£¬·ñÔò·µ»ØERROR  
+    //åœ¨ä¸‰å…ƒç»„è¡¨ç¤ºçš„ç¨€ç–çŸ©é˜µMï¼Œç¬¬ row+1 è¡Œï¼Œç¬¬ col+1 åˆ—ä½ç½®æ’å…¥å…ƒç´ e  
+    //æ’å…¥æˆåŠŸï¼Œè¿”å›OKï¼Œå¦åˆ™è¿”å›ERROR  
     int z,t;  
-    if(M->tu>=MAXSIZE){//µ±Ç°ÈıÔª×é±íÒÑÂú  
+    if(M->tu>=MAXSIZE){//å½“å‰ä¸‰å…ƒç»„è¡¨å·²æ»¡  
         printf("\nError:There is no space in the matrix;\n");  
         return ERROR;  
     }  
- // if(M->mu<=row||M->nu<=col){//µ±Ç°ÈıÔª×é±íÒÑÂú  
+ // if(M->mu<=row||M->nu<=col){//å½“å‰ä¸‰å…ƒç»„è¡¨å·²æ»¡  
         // printf("\nError:too many rows or cols;\n");  
         // return ERROR;  
     // }  
@@ -1335,9 +1264,9 @@ Status InsertElem(TSMatrix *M,int row,int col,ElemType e){
 
  /*
   
-%µÚÒ»ĞĞÎªĞĞ±ê µÚ¶şĞĞÎªÁĞ±ê£¬µÚÈıĞĞÎªÖµ,²»ÅÅĞò£¬²»ÔÊĞíÖØ¸´¡£
-%×¢Òâ£ºA	L ML MM ¼ÆËãµÄ¶¼ÊÇÖ»ÓĞÉÏÈı½Ç²¿·Ö
-%¶øPcurl, B¼ÆËãµÄÊÇÍêÕû²¿·Ö
+%ç¬¬ä¸€è¡Œä¸ºè¡Œæ ‡ ç¬¬äºŒè¡Œä¸ºåˆ—æ ‡ï¼Œç¬¬ä¸‰è¡Œä¸ºå€¼,ä¸æ’åºï¼Œä¸å…è®¸é‡å¤ã€‚
+%æ³¨æ„ï¼šA	L ML MM è®¡ç®—çš„éƒ½æ˜¯åªæœ‰ä¸Šä¸‰è§’éƒ¨åˆ†
+%è€ŒPcurl, Bè®¡ç®—çš„æ˜¯å®Œæ•´éƒ¨åˆ†
 	
   clear
   load D:\zsy\A.txt; load D:\zsy\B.txt;load D:\zsy\C.txt;
