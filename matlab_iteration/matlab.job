@@ -1,0 +1,24 @@
+#!/bin/bash -f
+#$ -S /bin/bash
+#$ -N matlab-sge
+#$ -pe mpich 1
+#$ -v MPIR_HOME=/usr/local/mpich-1.2.7p1-gnu2
+#
+#
+# The following is for reporting only. It is not really needed
+# to run the job. It will show up in your output file.
+#
+echo "Got number of slots $NSLOTS from NSLOTS."
+echo "Got number of hosts $NHOSTS from NHOSTS."
+echo "Got PE hostfile $PE_HOSTFILE slots from PE_HOSTFILE."
+cat $PE_HOSTFILE
+echo "Content of file $TMPDIR/machines"
+cat $TMPDIR/machines
+#
+#
+source /usr/local/etc/mpich-1.2.7p1-gnu2-intel.sh
+#
+# The following is the command to run MPI program
+#
+cd $HOME
+matlab runL.m>matlab-stdout.txt
