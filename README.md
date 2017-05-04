@@ -12,4 +12,4 @@ There will be four part:
 1) EasyMesh and some input/output files;
 2) code for finite element method (Edge element, first order Nedelec Element of the first kind);
 3) code for iteration method in Matlab;
-4) code for Latex(not finished yet).
+4) code for Latex(not updated yet).
