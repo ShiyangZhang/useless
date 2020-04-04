@@ -12,4 +12,10 @@ There will be four part:
 1) EasyMesh and some input/output files;
 2) code for finite element method (Edge element, first order Nedelec Element of the first kind);
 3) code for iteration method in Matlab;
-4) code for Latex(not updated yet).
+
+
+#update
+published: 
+https://www.semanticscholar.org/paper/Preconditioners-and-their-analyses-for-edge-element-Liang-Xiang/78b11316797610e40ca5a9b0fac901b4ead22d50  
+
+https://www.math.cuhk.edu.hk/~zou/publication/numalg20zhang.pdf
