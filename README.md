@@ -14,8 +14,8 @@ There will be four part:
 3) code for iteration method in Matlab;
 
 
-#update
-published: 
+## update   
+published:   
 https://www.semanticscholar.org/paper/Preconditioners-and-their-analyses-for-edge-element-Liang-Xiang/78b11316797610e40ca5a9b0fac901b4ead22d50  
 
 https://www.math.cuhk.edu.hk/~zou/publication/numalg20zhang.pdf
